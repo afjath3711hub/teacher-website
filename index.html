@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher’s Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav a {
+            margin: 10px;
+            color: white;
+            text-decoration: none;
+        }
+
+        section {
+            padding: 20px;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        select {
+            padding: 5px;
+        }
+
+        #output {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            min-height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Teacher’s Hub</h1>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Lessons</a>
+            <a href="#">Quizzes</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+    <section>
+        <!-- Language Switcher -->
+        <label for="lang">🌐 Language: </label>
+        <select id="lang" onchange="changeLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="ta">தமிழ்</option>
+            <option value="si">සිංහල</option>
+        </select>
+
+        <h2 id="welcome"></h2>
+        <p id="description"></p>
+
+        <!-- AI Buttons -->
+        <h3>AI Tools</h3>
+        <button onclick="askAI('Make a lesson plan about photosynthesis')">📘 Generate Lesson Plan</button>
+        <button onclick="askAI('Create a 5-question quiz about world history')">📝 Generate Quiz</button>
+        <button
+            onclick="askAI('Simplify this text: Artificial Intelligence is the simulation of human intelligence by machines.')">🔎
+            Simplify Text</button>
+
+        <!-- Output -->
+        <div id="output">AI output will appear here...</div>
+    </section>
+
+    <footer>
+        <p>© 2025 Teacher’s Hub</p>
+    </footer>
+
+    <script>
+        // Language Translations
+        const translations = {
+            en: { welcome: "Welcome to Teacher’s Hub!", description: "This platform helps teachers with lessons, quizzes, and AI tools." },
+            ta: { welcome: "ஆசிரியர் மையத்திற்கு வரவேற்கிறோம்!", description: "இந்த தளம் ஆசிரியர்களுக்கு பாடங்கள், வினாடி வினா, மற்றும் செயற்கை நுண்ணறிவு கருவிகளை வழங்குகிறது." },
+            si: { welcome: "ගුරුවරුන්ගේ මධ්‍යස්ථානයට සාදරයෙන් පිළිගනිමු!", description: "මෙම වේදිකාව ගුරුන්ට පාඩම්, ප්‍රශ්නෝත්තර, සහ AI මෙවලම් සපයයි." }
+        };
+
+        function changeLanguage(lang) {
+            document.getElementById("welcome").innerText = translations[lang].welcome;
+            document.getElementById("description").innerText = translations[lang].description;
+        }
+
+        // Default language
+        changeLanguage("en");
+
+        // AI Integration (HuggingFace - GPT2 demo, free)
+        async function askAI(prompt) {
+            document.getElementById("output").innerText = "⏳ Thinking...";
+            const response = await fetch("https://api-inference.huggingface.co/models/gpt2", {
+                method: "POST",
+                headers: { "Authorization": "Bearer hf_hf_OkwhREMpHqbuuqRcsurdtOzLfAVsNFtmtY" }, // you can get a free key from HuggingFace OR leave blank for public spaces
+                body: JSON.stringify({ inputs: prompt })
+            });
+            const result = await response.json();
+            if (result.error) {
+                document.getElementById("output").innerText = "⚠️ Free API limit reached. Try again later.";
+            } else {
+                document.getElementById("output").innerText = result[0].generated_text;
+            }
+        }
+    </script>
+</body>
+
+</html>
